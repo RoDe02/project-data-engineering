@@ -1,0 +1,21 @@
+{
+  "invalid_count": 0,
+  "published_at_utc": "2026-11-08T07:55:26.206870+00:00",
+  "quarantine_path": null,
+  "record_path": "s3a://silver/daily/date=2013-01-15/runs/manual--2026-11-08t07-54-16-00-00/records",
+  "run_id": "manual--2026-11-08t07-54-16-00-00",
+  "schema_version": 1,
+  "source_count": 2013315,
+  "source_date_cst": "2013-01-15",
+  "source_version": "sha256-674682e6df5a6f69c045",
+  "valid_count": 2013315,
+  "write_metrics": {
+    "bytes": 47823762,
+    "elapsed_seconds": 52.126,
+    "executor_instances": "2",
+    "max_file_bytes": 459266,
+    "min_file_bytes": 288181,
+    "parquet_files": 128,
+    "write_partitions": 64
+  }
+}

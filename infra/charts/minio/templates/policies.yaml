@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minio-policy-documents
+data:
+  ingestion.json: |
+    {"Version":"2012-10-17","Statement":[
+      {"Effect":"Allow","Action":["s3:ListBucket","s3:GetBucketLocation"],"Resource":["arn:aws:s3:::bronze"]},
+      {"Effect":"Allow","Action":["s3:GetObject","s3:PutObject"],"Resource":["arn:aws:s3:::bronze/*"]}]}
+  processing.json: |
+    {"Version":"2012-10-17","Statement":[
+      {"Effect":"Allow","Action":["s3:ListBucket","s3:GetBucketLocation"],"Resource":["arn:aws:s3:::bronze","arn:aws:s3:::silver","arn:aws:s3:::gold"]},
+      {"Effect":"Allow","Action":["s3:GetObject"],"Resource":["arn:aws:s3:::bronze/*","arn:aws:s3:::silver/*","arn:aws:s3:::gold/*"]},
+      {"Effect":"Allow","Action":["s3:PutObject","s3:DeleteObject"],"Resource":["arn:aws:s3:::silver/*","arn:aws:s3:::gold/*"]}]}
+  ml-reader.json: |
+    {"Version":"2012-10-17","Statement":[
+      {"Effect":"Allow","Action":["s3:ListBucket","s3:GetBucketLocation"],"Resource":["arn:aws:s3:::gold"]},
+      {"Effect":"Allow","Action":["s3:GetObject"],"Resource":["arn:aws:s3:::gold/*"]}]}

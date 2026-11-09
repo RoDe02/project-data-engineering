@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-provision-{{ .Release.Revision }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  ttlSecondsAfterFinished: 1200
+  backoffLimit: 10
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: mc
+          image: {{ required "values.mcImage is required" .Values.mcImage | quote }}
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              until mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"; do sleep 4; done
+              for bucket in bronze silver gold; do mc mb --ignore-existing "local/$bucket"; done
+              for bucket in bronze silver gold; do mc version enable "local/$bucket"; done
+              for name in ingestion processing ml-reader; do
+                mc admin policy create local "twitter-$name" "/policies/$name.json"
+              done
+              mc admin user add local "$INGEST_USER" "$INGEST_PASSWORD"
+              mc admin user add local "$PROCESS_USER" "$PROCESS_PASSWORD"
+              mc admin user add local "$ML_USER" "$ML_PASSWORD"
+              mc admin policy attach local twitter-ingestion --user "$INGEST_USER"
+              mc admin policy attach local twitter-processing --user "$PROCESS_USER"
+              mc admin policy attach local twitter-ml-reader --user "$ML_USER"
+          env:
+            - {name: MINIO_ROOT_USER, value: "admin"}
+            - {name: MINIO_ROOT_PASSWORD, value: {{ .Values.rootPassword | quote }}}
+            - name: INGEST_USER
+              valueFrom:
+                secretKeyRef: {name: minio-ingestion, key: AWS_ACCESS_KEY_ID}
+            - name: INGEST_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: minio-ingestion, key: AWS_SECRET_ACCESS_KEY}
+            - name: PROCESS_USER
+              valueFrom:
+                secretKeyRef: {name: minio-processing, key: AWS_ACCESS_KEY_ID}
+            - name: PROCESS_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: minio-processing, key: AWS_SECRET_ACCESS_KEY}
+            - name: ML_USER
+              valueFrom:
+                secretKeyRef: {name: minio-ml-reader, key: AWS_ACCESS_KEY_ID}
+            - name: ML_PASSWORD
+              valueFrom:
+                secretKeyRef: {name: minio-ml-reader, key: AWS_SECRET_ACCESS_KEY}
+          volumeMounts:
+            - {name: policies, mountPath: /policies, readOnly: true}
+      volumes:
+        - name: policies
+          configMap: {name: minio-policy-documents}

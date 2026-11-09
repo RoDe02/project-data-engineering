@@ -1,0 +1,75 @@
+airflowVersion: "2.10.5"
+executor: LocalExecutor
+securityContexts:
+  containers:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop: ["ALL"]
+    seccompProfile:
+      type: RuntimeDefault
+images:
+  airflow:
+    repository: twitter-airflow
+    tag: local
+    pullPolicy: IfNotPresent
+allowPodLaunching: true
+rbac:
+  create: true
+scheduler:
+  replicas: 1
+  serviceAccount:
+    create: false
+    name: airflow-orchestrator
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "2", memory: 2Gi}
+webserver:
+  defaultUser:
+    enabled: true
+    username: admin
+    password: admin
+    firstName: Local
+    lastName: Admin
+    email: admin@localhost.invalid
+    role: Admin
+  resources:
+    requests: {cpu: 250m, memory: 512Mi}
+    limits: {cpu: "1", memory: 1Gi}
+triggerer:
+  enabled: false
+redis:
+  enabled: false
+postgresql:
+  enabled: false
+data:
+  metadataConnection:
+    user: admin
+    pass: admin
+    protocol: postgresql
+    host: airflow-postgres
+    port: 5432
+    db: airflow
+logs:
+  persistence:
+    enabled: true
+    size: 5Gi
+dags:
+  gitSync:
+    enabled: false
+  persistence:
+    enabled: false
+config:
+  core:
+    load_examples: "False"
+    default_timezone: utc
+  webserver:
+    expose_config: "False"
+    base_url: http://localhost:8080
+extraEnv: |
+  - name: PLATFORM_NAMESPACE
+    value: twitter-data
+  - name: INGEST_IMAGE
+    value: twitter-ingest:local
+  - name: SPARK_IMAGE
+    value: twitter-spark:local

@@ -1,0 +1,28 @@
+# Keep container build contexts small and NEVER send local datasets or local
+# Terraform binaries/state/secrets to the Docker daemon or remote builders.
+data/
+terraform.exe
+*.zip
+*.csv
+*.parquet
+.git/
+.github/
+.venv/
+.env
+**/.env
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+.terraform/
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+infra/
+scripts/
+tests/
+docs/
+logs/
+build/
+dist/
+*.egg-info/

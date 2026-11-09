@@ -1,0 +1,12 @@
+image: dappros/minio:RELEASE.2025-09-07T16-13-09Z
+rootPassword: adminadmin
+mcImage: pgsty/mc:RELEASE.2026-10-18T00-00-00Z
+persistence:
+  size: 40Gi
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi

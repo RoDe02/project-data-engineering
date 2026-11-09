@@ -1,0 +1,17 @@
+{
+  "_comment": "Gold release from the four-executor run. Runtime metrics are in the Silver manifests.",
+
+  "created_at_utc": "2026-11-08T08:04:51.255024+00:00",
+  "feature_path": "s3a://gold/daily/date=2013-01-15/runs/manual--2026-11-08t08-02-44-00-00/features",
+  "feature_rows": 47168,
+  "grid_degrees": 0.25,
+  "min_cell_count": 5,
+  "run_id": "manual--2026-11-08t08-02-44-00-00",
+  "schema_version": 1,
+  "source_date_cst": "2013-01-15",
+  "source_tweet_count": 2013315,
+  "source_version": "sha256-674682e6df5a6f69c045",
+  "suppressed_tweet_count": 83527,
+  "time_granularity": "hour_utc",
+  "tweet_count_total": 1929788
+}

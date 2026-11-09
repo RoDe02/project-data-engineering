@@ -1,0 +1,6 @@
+image: postgres:16.10-alpine
+persistence:
+  size: 8Gi
+resources:
+  requests: {cpu: 200m, memory: 256Mi}
+  limits: {cpu: "1", memory: 1Gi}

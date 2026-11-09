@@ -1,0 +1,28 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+.venv/
+.env
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.hcl
+build/
+dist/
+*.egg-info/
+.DS_Store
+coverage.xml
+.coverage
+logs/
+*.zip
+*.parquet
+
+# Terraform Windows executable is provided by the operator; do not commit it.
+/terraform.exe
+/terraform.exe:Zone.Identifier
+
+# User-supplied local archives / CSV must never be packaged or committed.
+/data/input/*
+!/data/input/README.md
